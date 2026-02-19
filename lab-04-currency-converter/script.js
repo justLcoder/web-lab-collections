@@ -7,62 +7,72 @@ document.addEventListener("DOMContentLoaded", function () {
         USD: 1,
         EUR: 0.92,
         GBP: 0.78,
-        UZS: 11400,
+        UZS: 11400
     };
 
     initializeRow(rowsContainer.querySelector(".currency-row"));
 
-function initializeRow(row) {
-    const input = row.querySelector("input");
-    const select = row.querySelector("select");
+    function initializeRow(row) {
+        const input = row.querySelector("input");
+        const select = row.querySelector("select");
+        const removeBtn = row.querySelector(".remove");
 
-    input.addEventListener("input", handleChange);
-    select.addEventListener("change", handleChange);
-}
+        input.addEventListener("input", handleChange);
+        select.addEventListener("change", handleChange);
 
-function handleChange(event) {
-    const currentRow = event.target.closest(".currency-row");
-    const input = currentRow.querySelector("input");
-    const select = currentRow.querySelector("select");
+        if (removeBtn) {
+            removeBtn.addEventListener("click", function () {
+                if (rowsContainer.children.length > 1) {
+                    rowsContainer.removeChild(row);
+                }
+            });
+        }
+    }
 
-    const amount = Number(input.value);
-    const currency = select.value;
+    function handleChange(event) {
+        const currentRow = event.target.closest(".currency-row");
+        const input = currentRow.querySelector("input");
+        const select = currentRow.querySelector("select");
 
-    if (!amount) return;
+        const amount = Number(input.value);
+        const currency = select.value;
 
-    const amountInUSD = amount / rates[currency];
+        if (!amount) return;
 
-    const allRows = rowsContainer.querySelectorAll(".currency-row");
+        const amountInUSD = amount / rates[currency];
 
-    allRows.forEach(row => {
-        if (row === currentRow) return;
+        const allRows = rowsContainer.querySelectorAll(".currency-row");
 
-        const rowInput = row.querySelector("input");
-        const rowSelect = row.querySelector("select");
+        allRows.forEach(row => {
+            if (row === currentRow) return;
 
-        const converted = amountInUSD * rates[rowSelect.value];
-        rowInput.value = converted.toFixed(2);
+            const rowInput = row.querySelector("input");
+            const rowSelect = row.querySelector("select");
+
+            const converted = amountInUSD * rates[rowSelect.value];
+            rowInput.value = converted.toFixed(2);
+        });
+    }
+
+    addRowBtn.addEventListener("click", function () {
+
+        const row = document.createElement("div");
+        row.classList.add("currency-row");
+
+        row.innerHTML = `
+            <input type="number" placeholder="Enter amount">
+            <select>
+                <option value="USD">USD</option>
+                <option value="EUR">EUR</option>
+                <option value="GBP">GBP</option>
+                <option value="UZS">UZS</option>
+            </select>
+            <button class="remove">X</button>
+        `;
+
+        rowsContainer.appendChild(row);
+
+        initializeRow(row);
     });
-}
-
-addRowBtn.addEventListener("click", function () {
-
-    const row = document.createElement("div");
-    row.classList.add("currency-row");
-
-    row.innerHTML = `
-        <input type="number" placeholder="Enter amount">
-        <select>
-            <option value="USD">USD</option>
-            <option value="EUR">EUR</option>
-            <option value="GBP">GBP</option>
-            <option value="UZS">UZS</option>
-        </select>
-    `;
-
-    rowsContainer.appendChild(row);
-
-    initializeRow(row);
-});
 
 });
