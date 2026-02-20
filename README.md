@@ -7,4 +7,4 @@ This repository contains structured lab projects built during my Web Programming
 - Lab 3 – AI Text Detector
 
 ## Live Demo
-https://justLcoder.github.io/Web-Lab-Collections/
+https://justLcoder.github.io/web-lab-collections/
